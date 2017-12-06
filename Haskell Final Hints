@@ -13,3 +13,8 @@ values = 			<- eval each e from expressions using old env
 newEnv = zip variables values   --don't forget to add the old env to the end
 
 evaluate (    ) `shouldThrow` anyException
+
+exp1 = 11
+exp2 = 16
+exp3 = 14
+exp4 = variable is undbound
