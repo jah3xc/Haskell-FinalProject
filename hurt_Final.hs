@@ -54,8 +54,14 @@ eval (Variable x) env               = fromJust x (lookup x env)
         fromJust x Nothing          = errorWithoutStackTrace ("Variable " ++ x ++ " unbound!")
 eval (Function x body) env          = ClosureV x body env
 -----------------------------------------------------------------
-eval (Declare x [(x,exp)] body) env = eval body newEnv         -- This clause needs to be changed.
-  where newEnv = (x, eval exp env) : env                       --
+--eval (Declare x [(x,exp)] body) env = eval body newEnv         -- This clause needs to be changed.
+ -- where newEnv = (x, eval exp env) : env    
+
+eval (Declare decls body) env = eval body newEnv
+  where vars = map fst decls
+        testvar = map snd decls
+        values = map eval testvar
+        newEnv = zip vars values                     --
 -----------------------------------------------------------------
 eval (RecDeclare x exp body) env    = eval body newEnv
   where newEnv = (x, eval exp newEnv) : env
