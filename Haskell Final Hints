@@ -1,0 +1,13 @@
+var x=1, y=2; x+y;	= eval body newEnv
+	      body
+
+
+initial env: []
+	      (x,1)
+	      (y, 2)
+
+
+variables = map fst decls
+expressions = map snd decls
+values = 			<- eval each e from expressions using old env
+newEnv = zip variables values
