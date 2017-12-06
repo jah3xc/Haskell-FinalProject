@@ -20,3 +20,12 @@ exp3 = 14
 exp4 = variable is undbound
 
 DONT ASK FOR A BETTER GRADE
+
+free :: [String] -> Exp -> [String]
+free seen (Literal _)	= []
+free seen (Unary _ e )	= free
+free seen (Binary _ e1 e1)	=
+free seen( If t e1 e2)	=
+free seen(Variable x) =
+free seen (Declare bs body)	=
+free seen (Call e1 e2) =
