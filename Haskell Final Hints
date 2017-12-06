@@ -11,3 +11,5 @@ variables = map fst decls
 expressions = map snd decls
 values = 			<- eval each e from expressions using old env
 newEnv = zip variables values
+
+evaluate (    ) `shouldThrow` anyException

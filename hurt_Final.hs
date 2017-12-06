@@ -28,7 +28,7 @@ import System.Console.Haskeline
 --
 
 facvar   = parseExp ("var fac = function(n) { if (n==0) 1 else n * fac(n-1) };" ++
-                   "fac(5)")
+                   "fac(5)")  --should throw error because it's unbound
 
 facrec   = parseExp ("rec fac = function(n) { if (n==0) 1 else n * fac(n-1) };" ++
                    "fac(5)")
