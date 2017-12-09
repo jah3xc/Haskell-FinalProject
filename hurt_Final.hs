@@ -57,11 +57,18 @@ eval (Function x body) env          = ClosureV x body env
 --eval (Declare x [(x,exp)] body) env = eval body newEnv         -- This clause needs to be changed.
  -- where newEnv = (x, eval exp env) : env    
 
+--We used the discussion in class to complete this problem.
+--The problem was separating the tuple, evaluating the second part, and then combining them together.
+--the use of map comes in handy in this function as it 'maps' a function over a list.
+--Unforunately, map only takes a function and a string, whereas eval takes a variable and an env.
+--To solve this, we used Haskell's first class functions to create a function to handle the eval
+--and then used that function inside map, in this case to satisfy maps' type.
 eval (Declare decls body) env = eval body newEnv
   where vars = map fst decls
         testvar = map snd decls
-        values = map eval testvar
-        newEnv = zip vars values                     --
+        values = map eval' testvar
+		where eval' x = eval x env
+        newEnv = zip vars values ++ env                     
 -----------------------------------------------------------------
 eval (RecDeclare x exp body) env    = eval body newEnv
   where newEnv = (x, eval exp newEnv) : env
