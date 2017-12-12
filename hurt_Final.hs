@@ -114,4 +114,20 @@ process iline  = do
 
 
 
-
+-- Test problems!
+-- On problem one, I just used the values we knew the exp's returned as test cases. I figured if execute worked correctly on those, than the answers it returned on facvar and facrec were also correct so I then added it to those
+test_prob1 :: IO()
+test_prob1 = hspec $ do
+	describe "Prob1 test case" $ do
+		it "execute exp1 should return IntV 11" $ do
+			execute exp1 `shouldBe` IntV 11
+		it "execute exp2 should return IntV 16" $ do
+			execute exp2 `shouldBe` IntV 16
+		it "execute exp3 should return IntV 14" $ do
+			execute exp3 `shouldBe` IntV 14
+		it "execute exp4 should throw an Exception" $ do
+			evaluate (execute exp4) `shouldThrow` anyException
+		it "execute facvar should throw an exception" $ do
+			evaluate (execute facvar) `shouldThrow` anyException
+		it "execute facrec should return IntV 120" $ do
+			execute facrec `shouldBe` IntV 120	
