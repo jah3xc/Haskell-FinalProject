@@ -38,6 +38,8 @@ exp2     = parseExp "var a = 3; var b = 8; var a = b; var b = a; a + b"
 exp3     = parseExp "var a = 2, b = 7; (var m = 5 * a, n = b - 1; a * n + b / m) + a"
 exp4     = parseExp "var a = 2, b = 7; (var m = 5 * a, n = m - 1; a * n + b / m) + a"         
 -- N.b.,                                                  ^^^ is a free occurence of m (by Rule 2)
+exp5 = parseExp "var m = 42, n = m; n + m"
+exp6 = parseExp ("var n = 1, m = n; a + b")
 
 -----------------
 -- The evaluation function for the recursive function language.
@@ -93,36 +95,41 @@ when doing the Declare case.
 freeByRule1 :: [String] -> Exp -> [String]
 freeByRule1 = undefined
 
--- Start with empty list and work through, adding variables to list
+
+-- FreeByRule2
+-- Credit: Justin Hofer, MU CS Alumnus 
 
 freeByRule2 :: [String] -> Exp -> [String]
 
- -- Literals have no variables
+ -- No variables in literals
 freeByRule2 seen (Literal _)            = []
--- Strip off the operation, pass variable back into the function
+-- remove op, put back variable
 freeByRule2 seen (Unary _ e)            = freeByRule2 seen e
--- Ditto, but with two expressions
+-- remote op, put back 2 variables
 freeByRule2 seen (Binary _ e1 e2)       = (freeByRule2 seen e1) ++ (freeByRule2 seen e2)
--- Stip off Comparison and pass exps back
+-- remove If and put back e's=
 freeByRule2 seen (If e1 e2 e3)          = ((freeByRule2 seen e1) ++ (freeByRule2 seen e2)) ++ (freeByRule2 seen e3)
--- If we've seen the variable before, it's bounded, else it's free, add free variable to accumulator list
+-- Check if we've seen this element before. If not, its free!
 freeByRule2 seen (Variable x)           = if x `elem` seen then [] else [x]
--- Get all declared variables through accumulator passing
+-- return all variables that were declared
 freeByRule2 seen (Declare decls body)   = freeHelper2 seen (Declare decls body) []
--- Multiple declarations are split up and variable is added to list of seen variables
+-- Split declarations, and add to seen 
 freeByRule2 seen (RecDeclare x e1 e2) = (freeByRule2 (x:seen) e1) ++ (freeByRule2 (x:seen) e2)
--- Pass function body back into the function. Add variable to list of seen variables
+-- put back the body and add to seen
 freeByRule2 seen (Function x e) = freeByRule2 (x:seen) e
--- Split up expressions
+-- mult expressions - split them
 freeByRule2 seen (Call e1 e2) = (freeByRule2 seen e1) ++ (freeByRule2 seen e2)
 
--- (Second List is acc)
+-- helper func
 freeHelper2 :: [String] -> Exp -> [String] -> [String]
--- Pull off variable name being declared, pass expression to check for more free variables
--- if not variable return acc, if variable check if variable has been seen, if not seen add to free
--- case 1 if not free add to list of seen, case 2 add to free
+-- get variable name, put back expression
+-- check for more free variables
+-- no more vars --> return accumulator
+-- variable --> check if seen
+--    not seen -> add to free list
+-- add to seen if not free
 freeHelper2 seen (Declare ((x, e1):xs) e2) acc  = (freeByRule2 seen e1) ++ (freeHelper2 seen (Declare xs e2) (x:acc))
--- Plan expression, no new variable being declared
+--  nothing declared here
 freeHelper2 seen (Declare [] e2) acc            = freeByRule2 (acc ++ seen) e2
 
 --jotted these down from board in class. use these as a starting point
@@ -173,11 +180,6 @@ test_prob1 = hspec $ do
 			evaluate (execute facvar) `shouldThrow` anyException
 		it "execute facrec should return IntV 120" $ do
 			execute facrec `shouldBe` IntV 120	
-
-
-
-exp5 = parseExp "var m = 42, n = m; n + m"
-exp6 = parseExp ("var n = 1, m = n; a + b")
 
 
 test_free2:: IO ()
