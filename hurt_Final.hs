@@ -96,6 +96,23 @@ when doing the Declare case.
 freeByRule1 :: [String] -> Exp -> [String]
 freeByRule1 = undefined
 
+freeByRule1 seen (Literal _)           = []
+
+freeByRule1 seen (Unary _ e)           = freeByRule1 seen e
+
+freeByRule1 seen (Binary _ e)          = (freeByRule1 seen e1) ++ (freeByRule1 seeb e2)
+
+freeByRule1 seen (If e1 e2 e3)         = ((freeByRule1 seen e1) ++ (freeByRule1 seen e2)) ++ (freeByRule1 seen e3)
+
+freeByRule1 seen (Variable x)          = if x `elem` seen then [] else [x]
+
+freeByRule1 seen (Declare decls body)  =
+
+freeByRule1 seen (RecDeclare x e1 e2)  =
+
+freeByRule1 seen (Function x e)        =
+
+freeByRule1 seen (call e1 e2)          =
 
 -- FreeByRule2
 -- Credit: Justin Hofer, MU CS Alumnus 
