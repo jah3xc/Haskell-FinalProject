@@ -98,6 +98,7 @@ freeByRule2 = undefined
 
 --jotted these down from board in class. use these as a starting point
 
+{-
 free :: [String] -> Exp -> [String]
 free seen (Literal _) 		= []
 free seen (Unary _ e) 		= free
@@ -107,7 +108,7 @@ free seen (Variabl x) 		=
 free seen (Declare bs body) 	=
 free seen (Call e1 e2) 		=
 
-
+-}
 ---- Problem 3.
 
 repl :: IO ()
