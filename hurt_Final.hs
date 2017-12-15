@@ -26,6 +26,7 @@ import System.Console.Haskeline
 --
 -- The parsing function, parseExp :: String -> Exp, is defined for you.
 --
+exp1, exp2, exp3, exp4, exp5, exp6, facvar, facrec :: Exp
 
 facvar   = parseExp ("var fac = function(n) { if (n==0) 1 else n * fac(n-1) };" ++
                    "fac(5)")  --should throw error because it's unbound
